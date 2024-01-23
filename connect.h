@@ -24,26 +24,16 @@ ported for sparkfun esp32
 31.01.2017 by Jan Hendrik Berlin
  
  */
-
 #include <WiFi.h>
+#include <string>
 
 // Replace with your network credentials
 const char* ssid     = "tesla iot";
 const char* password = "fsL6HgjN";
 
-int START_OF_STOP = 1;
 // Create an instance of the server
 WiFiServer server(80);
 
-void startLoop2() {
-  START_OF_STOP == 1;
-  // Code to start loop2
-  }
-
-void stopLoop2() {
-  START_OF_STOP == 0;
-  // Code to stop loop2
-}
 
 void setupfn() {
   delay(10);
@@ -82,47 +72,52 @@ void loopfn() {
   // Read the first line of the request
   String request = client.readStringUntil('\r');
   client.flush();
-
+  Serial.println(request);
+  Serial.println(String(START_OF_STOP));
   // Match the request
-  if (request.indexOf("/LOOP2/START") != -1) {
-    startLoop2();
-  } else if (request.indexOf("/LOOP2/STOP") != -1) {
-    stopLoop2();
+  if (request.indexOf("START") != -1) {
+    START_OF_STOP = 1;
+  }
+  if (request.indexOf("STOP") != -1) {
+    START_OF_STOP = 0;
+  }
+  if (request.indexOf("RESET") != -1) {
+    bochtenteller = 0;
+  }
+  if (request.indexOf("SET") != -1) {
+    String str = request.substring(request.indexOf("/SET")+ 5,request.indexOf("HTTP")-1);
+    Serial.println("\"" + str + "\"");
+    bochtenteller = str.toInt();
   }
 
-int irSensorValue = -1;
-int irRightSensorValue = analogRead(IR_RECHTS_PIN);
-int irLeftSensorValue = analogRead(IR_LINKS_PIN);
-int irFrontSensorValue = analogRead(IR_VOOR_PIN);
-int reedValue = analogRead(REED_PIN);
 
   // Create a string with the sensor value
-  String sensorValueStr0 = "IR Sensor value: " + String(irSensorValue);
-    client.println();
-  String sensorValueStr1 = "Right IR Sensor value: " + String(irRightSensorValue);
-    client.println();
+  client.println();
+  client.println();
+  String sensorValueStr1 =  "Laatse detectie rechts: " + String(millis() - laatstR) + "<br>";
 
-  String sensorValueStr2 = "Left IR Sensor value: " + String(irLeftSensorValue);
-  String sensorValueStr3 = "Front IR Sensor value: " + String(irFrontSensorValue);
-  String sensorValueStr4 = "Reed Sensor value: " + String(reedValue);
+  String sensorValueStr2 = "Laatste detectie links: " + String(millis() - laatstL) + "<br>";
+  String sensorValueStr3 = "Laatste detectie voor: " + String(millis() - laatstV) +"<br>";
+  String sensorValueStr4 = "Laatste bocht: " + String(bochtenteller) + "<br>";
+  String sensorValueStr5 = "ZijkantKennis: " + String(zijkantKennis) + "<br>";
 
   // Send the response to the client
   client.println("HTTP/1.1 200 OK");
   client.println("Content-Type: text/html");
   client.println("Connection: close");
-  client.println("Refresh: 5");
+  client.println("Refresh: 1");
   client.println();
   client.println("<!DOCTYPE HTML>");
   client.println("<html>");
-  client.println("<a href=\"/LOOP2/START\">Start Loop2</a><br>");
-  client.println("<a href=\"/LOOP2/STOP\">Stop Loop2</a><br>");
-  client.println(sensorValueStr0);
-  client.println(sensorValueStr1);
+  client.println("<a href=\"/START\">Start</a><br>");
+  client.println("<a href=\"/STOP\">Stop</a><br>");
+  client.println("<a href=\"/RESET\">reset</a><br>");
+  client.println("<p>" + sensorValueStr1);
   client.println(sensorValueStr2);
   client.println(sensorValueStr3);
   client.println(sensorValueStr4);
-
+  client.println(sensorValueStr5 + "</p>");
   client.println("</html>");
 
-  delay(1);
+  delay(1000);
 }

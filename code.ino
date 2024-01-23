@@ -1,8 +1,9 @@
+#include "global.h"
 #include "motor.h"
 #include "sensor.h"
 #include "test.h"
-#include "connect.h"
 #include "ride.h"
+#include "connect.h"
 
 
 

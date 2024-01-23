@@ -1,6 +1,12 @@
 const int linkerbochten[] = {3,8,9,13};
 const int aantalLinks = 4;
 
+unsigned long laatstV = millis();
+unsigned long laatstL = millis();
+unsigned long laatstR = millis();
+int zijkantKennis = 1;
+int bochtenteller = 0;
+
 int kennisInc(int i, bool even){
   static unsigned long laatst = millis();
   if(millis() - laatst > 100){
@@ -12,30 +18,25 @@ int kennisInc(int i, bool even){
 
 void drive (void* pvParameters){
   while(1){
-    if(START_OF_STOP){
+    if(!START_OF_STOP){
       motorControl(0,0);
-      while(!START_OF_STOP){}
+      long unsigned t = millis();
+      while(!START_OF_STOP){
+        if(millis() - t > 1000){
+          Serial.println("Man Im DEAD " + String(START_OF_STOP));
+          t = millis();
+        }
+        if(START_OF_STOP){
+          zijkantKennis = 1;
+          break;
+        }
+      }
     }
-    // testMotor();
-    //testTime();
-    static unsigned long laatstV = millis();
-    static unsigned long laatstL = millis();
-    static unsigned long laatstR = millis();
-    static int zijkantKennis = 1;
-    static int bochtenteller = 0;
     static int laatstebocht = 0;
     static bool linkerbocht = false;
     static bool grotebocht = false;
     SensorData omgeving = leesSensoren();
     static unsigned long printTijd = millis();
-    if((millis() - printTijd) > 1000){
-      Serial.println("bocht: " + String(bochtenteller));
-      //Serial.println("Tijd: " + String(millis() - laatstL));
-      Serial.println("kennis: " + String(zijkantKennis));
-      Serial.println("groot: " + String(grotebocht));
-      Serial.println("links: " + String(linkerbocht));
-      printTijd = millis();
-    }
     if(bochtenteller != laatstebocht){
       linkerbocht = false;
       for(int i = 0; i < aantalLinks;++i){
@@ -73,14 +74,13 @@ void drive (void* pvParameters){
       grotebocht = false;
     } else {
       zijkantKennis = kennisInc(zijkantKennis,false);
-      if(bochtenteller == 4 && millis()%250 < 50){
+      if(bochtenteller == 4 && millis()%250 < 100){
         motorControl(1,0);
       }
       motorControl(1,1);
     }
     if(bochtenteller > 15){
-      motorControl(0,0);
-      while(1){}
+      START_OF_STOP = 0;
     }
   }
 }
