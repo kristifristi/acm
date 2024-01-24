@@ -79,8 +79,8 @@ void loopfn() {
   // Read the first line of the request
   String request = client.readStringUntil('\r');
   client.flush();
-  Serial.println(request);
-  Serial.println(String(START_OF_STOP));
+  // Serial.println(request);
+  // Serial.println(String(START_OF_STOP));
   // Match the request
   if (request.indexOf("START") != -1) {
     START_OF_STOP = 1;
@@ -93,7 +93,7 @@ void loopfn() {
   }
   if (request.indexOf("SET") != -1) {
     String str = request.substring(request.indexOf("/SET")+ 5,request.indexOf("HTTP")-1);
-    Serial.println("\"" + str + "\"");
+    // Serial.println("\"" + str + "\"");
     bochtenteller = str.toInt();
   }
 

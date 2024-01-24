@@ -25,14 +25,14 @@ int kennisInc(int i, bool even){
 }
 
 void drive (void* pvParameters){
-  Serial.print("hellow world");
+  // Serial.print("hellow world");
   while(1){
     if(!START_OF_STOP){
       motorControl(0,0);
       long unsigned t = millis();
       while(!START_OF_STOP){
         if(millis() - t > 1000){
-          Serial.println("Man Im DEAD " + String(START_OF_STOP));
+          // Serial.println("Man Im DEAD " + String(START_OF_STOP));
           t = millis();
         }
         if(START_OF_STOP){

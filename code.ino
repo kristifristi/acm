@@ -15,7 +15,7 @@ hogeschool rotterdam
 void setup() {
   motorSetup();
   sensorSetup();
-  pinMode(LED_BUILTIN, OUTPUT);
+  // pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(921600);
   xTaskCreatePinnedToCore (
       drive,     // Function to implement the task
