@@ -11,6 +11,7 @@ const int aantalLinks = 4;
 unsigned long laatstV = millis();
 unsigned long laatstL = millis();
 unsigned long laatstR = millis();
+unsigned long laatstM = millis();
 int zijkantKennis = 1;
 int bochtenteller = 0;
 
@@ -44,7 +45,8 @@ void drive (void* pvParameters){
     static bool grotebocht = false;
     SensorData omgeving = leesSensoren();
     static unsigned long printTijd = millis();
-    START_OF_STOP |= omgeving.reed;
+    if(omgeving.reed)
+      START_OF_STOP = 0;
     if(bochtenteller != laatstebocht){
       linkerbocht = false;
       for(int i = 0; i < aantalLinks;++i){
