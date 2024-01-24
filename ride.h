@@ -61,8 +61,11 @@ void drive (void* pvParameters){
       zijkantKennis = kennisInc(zijkantKennis,true);
       motorControl(0,1);
       laatstR = millis();
-    } else if(zijkantKennis == 0){   
+    } else if(zijkantKennis == 0){
       linkerbocht ? motorControl(0,1) : motorControl(1,0);
+      if(millis()%250 < 50){
+        motorControl(1,1);
+      }
     } else if(grotebocht && zijkantKennis > 1){
       while(!leesSensoren().links || millis() - laatstL < 500){
         if(millis()%250 < 175){
@@ -74,7 +77,7 @@ void drive (void* pvParameters){
       grotebocht = false;
     } else {
       zijkantKennis = kennisInc(zijkantKennis,false);
-      if(bochtenteller == 4 && millis()%250 < 100){
+      if(bochtenteller == 4 && millis()%250 < 75){
         motorControl(1,0);
       }
       motorControl(1,1);
