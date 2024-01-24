@@ -25,6 +25,7 @@ int kennisInc(int i, bool even){
 }
 
 void drive (void* pvParameters){
+  Serial.print("hellow world");
   while(1){
     if(!START_OF_STOP){
       motorControl(0,0);
@@ -45,8 +46,7 @@ void drive (void* pvParameters){
     static bool grotebocht = false;
     SensorData omgeving = leesSensoren();
     static unsigned long printTijd = millis();
-    if(omgeving.reed)
-      START_OF_STOP = 0;
+    if(omgeving.reed){ START_OF_STOP = 0; }
     if(bochtenteller != laatstebocht){
       linkerbocht = false;
       for(int i = 0; i < aantalLinks;++i){
@@ -61,8 +61,8 @@ void drive (void* pvParameters){
       if((millis() - laatstV) > 1000){
         ++bochtenteller;
       }
-      laatstV = millis();
       zijkantKennis = 0;
+      laatstV = millis();
     } else if(omgeving.links){
       zijkantKennis = kennisInc(zijkantKennis,true);
       motorControl(1,0);
@@ -72,9 +72,10 @@ void drive (void* pvParameters){
       motorControl(0,1);
       laatstR = millis();
     } else if(zijkantKennis == 0){
-      linkerbocht ? motorControl(0,1) : motorControl(1,0);
-      if(millis()%250 < 50){
+      if(millis() - laatstV > 100){
         motorControl(1,1);
+      } else {
+        linkerbocht ? motorControl(0,1) : motorControl(1,0);
       }
     } else if(grotebocht && zijkantKennis > 1){
       while(!leesSensoren().links || millis() - laatstL < 500){
@@ -83,14 +84,16 @@ void drive (void* pvParameters){
         } else {
           motorControl(0,1);
         }
+        if(leesSensoren().voor) { break;}
       }
       grotebocht = false;
     } else {
       zijkantKennis = kennisInc(zijkantKennis,false);
-      if(bochtenteller == 4 && millis()%250 < 20){
+      if(bochtenteller == 4 && millis()%250 < 40){
         motorControl(1,0);
+      } else {
+        motorControl(1,1);
       }
-      motorControl(1,1);
     }
     if(bochtenteller > 15){
       START_OF_STOP = 0;

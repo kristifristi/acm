@@ -31,6 +31,8 @@ void setup() {
 
 void loop() {
   loopfn();
+  // digitalWrite(LED_BUILTIN, HIGH);
+  // testMotor();
 }
 
 

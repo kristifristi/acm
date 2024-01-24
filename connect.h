@@ -101,6 +101,7 @@ void loopfn() {
   // Create a string with the sensor value
   client.println();
   client.println();
+  String preface = "<p>Time: " + String(millis()) + "<br>";
   String sensorValueStr0 =  "Reed: " + String(digitalRead(REED_PIN)) + "<br>";
   String sensorValueStr1 =  "Laatse detectie rechts: " + String(millis() - laatstR) + "<br>";
 
@@ -120,7 +121,8 @@ void loopfn() {
   client.println("<a href=\"/START\">Start</a><br>");
   client.println("<a href=\"/STOP\">Stop</a><br>");
   client.println("<a href=\"/RESET\">reset</a><br>");
-  client.println("<p>" + sensorValueStr0);
+  client.println(preface);
+  client.println(sensorValueStr0);
   client.println(sensorValueStr1);
   client.println(sensorValueStr2);
   client.println(sensorValueStr3);
