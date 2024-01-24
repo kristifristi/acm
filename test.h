@@ -1,9 +1,16 @@
-
+/*
+project 2: acm
+Kristiaan Cramer
+1069459
+hogeschool rotterdam
+2024
+*/
 void testSensor(){
   SensorData omgeving = leesSensoren();
   Serial.print(omgeving.links ? "L" : " ");
   Serial.print(omgeving.voor ? "V" : " ");
-  Serial.println(omgeving.rechts ? "R" : " ");
+  Serial.print(omgeving.rechts ? "R" : " ");
+  Serial.println((omgeving.reed) ? "M" : " "); //DEZE HAAKJES ZIJN LOADBEARING AAAAAAAAAAAAAAAAAAAAAAA
 }
 
 void testMotor() {

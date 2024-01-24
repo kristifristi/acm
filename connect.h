@@ -24,6 +24,13 @@ ported for sparkfun esp32
 31.01.2017 by Jan Hendrik Berlin
  
  */
+
+ /* 
+aangepast door 
+Issam Mahrik
+1082232
+*/
+ 
 #include <WiFi.h>
 #include <string>
 

@@ -1,3 +1,10 @@
+/*
+project 2: acm
+Kristiaan Cramer
+1069459
+hogeschool rotterdam
+2024
+*/
 #define MOTOR_L_VOORUIT 21 
 #define MOTOR_L_ACHTERUIT 19
 #define MOTOR_R_VOORUIT 4

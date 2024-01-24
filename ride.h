@@ -1,3 +1,10 @@
+/*
+project 2: acm
+Kristiaan Cramer
+1069459
+hogeschool rotterdam
+2024
+*/
 const int linkerbochten[] = {3,8,9,13};
 const int aantalLinks = 4;
 
@@ -37,6 +44,7 @@ void drive (void* pvParameters){
     static bool grotebocht = false;
     SensorData omgeving = leesSensoren();
     static unsigned long printTijd = millis();
+    START_OF_STOP |= omgeving.reed;
     if(bochtenteller != laatstebocht){
       linkerbocht = false;
       for(int i = 0; i < aantalLinks;++i){
@@ -77,7 +85,7 @@ void drive (void* pvParameters){
       grotebocht = false;
     } else {
       zijkantKennis = kennisInc(zijkantKennis,false);
-      if(bochtenteller == 4 && millis()%250 < 75){
+      if(bochtenteller == 4 && millis()%250 < 20){
         motorControl(1,0);
       }
       motorControl(1,1);
